@@ -1,5 +1,93 @@
 <template>
-  <div class="container">
+  <div class="container text-center">
+    <form class="w-1/2 my-10 mx-auto" @submit.prevent="uploadScreenshots">
+      <div>
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Website screenshot framer
+          </h3>
+          <p class="mt-1 text-sm text-gray-500">
+            Enter the URL you want to frame here
+          </p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-6">
+            <label for="url" class="block text-sm font-medium text-gray-700">
+              Website url (https://example.com)
+            </label>
+            <div class="mt-1">
+              <input
+                type="text"
+                name="url"
+                id="url"
+                v-model="url"
+                class="
+                  shadow-sm
+                  focus:ring-indigo-500
+                  focus:border-indigo-500
+                  block
+                  w-full
+                  sm:text-sm
+                  border-gray-300
+                  rounded-md
+                "
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-5">
+        <p v-if="uploading" class="text-sm text-gray-700">
+          Generating framed screenshots...
+        </p>
+        <div v-else class="flex justify-center">
+          <button
+            type="reset"
+            class="
+              bg-white
+              py-2
+              px-4
+              border border-gray-300
+              rounded-md
+              shadow-sm
+              text-sm
+              font-medium
+              text-gray-700
+              hover:bg-gray-50
+              focus:outline-none
+              focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+            "
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="
+              ml-3
+              inline-flex
+              justify-center
+              py-2
+              px-4
+              border border-transparent
+              shadow-sm
+              text-sm
+              font-medium
+              rounded-md
+              text-white
+              bg-indigo-600
+              hover:bg-indigo-700
+              focus:outline-none
+              focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+            "
+          >
+            Generate
+          </button>
+        </div>
+      </div>
+    </form>
+
     <div
       class="text-center"
       v-if="screenshots.mobile && screenshots.tablet && screenshots.desktop"
@@ -71,7 +159,7 @@ export default {
   data() {
     return {
       uploading: false,
-      url: "https://google.com",
+      url: "https://",
       templates: {
         mobile: "nuxtjs-website-screenshot-framer/templates/iphone.png",
         tablet: "nuxtjs-website-screenshot-framer/templates/ipad.png",
@@ -132,6 +220,7 @@ export default {
   methods: {
     async uploadScreenshots(e) {
       this.uploading = true;
+      setTimeout(() => (this.uploading = false), 5000);
       this.toDataURL(
         this.mobileScreenshotUrl,
         async (dataUrl) =>
@@ -159,7 +248,6 @@ export default {
             folder: `nuxtjs-website-screenshot-framer/${this.domainName}`,
           }))
       );
-      this.uploading = false;
     },
     toDataURL(url, callback) {
       var xhr = new XMLHttpRequest();
